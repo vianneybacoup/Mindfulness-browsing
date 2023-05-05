@@ -1,4 +1,4 @@
-function overlay() {
+function overlay(timeout) {
   const newDiv = document.createElement("div")
   newDiv.id = "overlay-extension"
 
@@ -17,18 +17,21 @@ function overlay() {
 
   setTimeout(() => {
     document.getElementById("overlay-extension").remove();
-    chrome.storage.session.set({ "host": window.location.host }, () => {
-      if (chrome.runtime.lastError)
-        alert('Error setting');
-    })
-  }, 2000)
+
+    const message = {
+      "query": "ACK",
+      "host": window.location.host
+    }
+    chrome.runtime.sendMessage(message)
+  }, timeout)
 }
 
-chrome.storage.session.get("host", function(result) {
-  if (chrome.runtime.lastError)
-    alert('Error getting');
 
-  if (result.host == undefined) { 
-    overlay()
-  }
+const message = {
+  "query": "GET_RULE",
+  "host": window.location.host
+}
+chrome.runtime.sendMessage(message, (result) => {
+  if (result.response == "RULE_FOUND")
+    overlay(result.timeout)
 })
