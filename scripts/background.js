@@ -1,32 +1,63 @@
-const rules = {
-    "developer.chrome.com": {
-        "timeout": 2000
-    }
-}
+var rules = {}
+var ack = {}
 
-var ack = []
+chrome.storage.sync.get("rules", function(result) {
+    if (result.rules) {
+        rules = result.rules
+    }
+})
+chrome.storage.session.get("ack", function(result) {
+    if (result.ack) {
+        ack = result.ack
+    }
+})
+
 
 chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
     var response = {}
     switch (message.query) {
         case "GET_RULE":
-            if (ack.includes(message.host)) {
-                response = {
-                    "response": "ALREADY_ACK"
-                }
-            } else if (rules[message.host]) {
-                response = {
-                    "response": "RULE_FOUND",
-                    "timeout": rules[message.host].timeout
-                }
-            } else {
+            if (rules[message.host] == undefined) {
                 response = {
                     "response": "NO_RULE"
                 }
             }
+            else if (ack[message.host]) {
+                response = {
+                    "response": "ALREADY_ACK"
+                }
+            } else {
+                response = {
+                    "response": "RULE_FOUND",
+                    "timeout": rules[message.host].timeout
+                }
+            }
             break
         case "ACK":
-            ack.push(message.host)
+            ack[message.host] = "ack"
+            chrome.storage.session.set({ "ack": ack })
+            break
+        case "ADD_RULE":
+            rules[message.host] = { "timeout": message.timeout}
+            chrome.storage.sync.set({ "rules": rules })
+
+            ack[message.host] = "ack"
+            chrome.storage.session.set({ "ack": ack })
+
+            response = {
+                "response": "RULE_ADDED"
+            }
+            break
+        case "DELETE_RULE":
+            delete rules[message.host]
+            chrome.storage.sync.set({ "rules": rules })
+
+            delete ack[message.host]
+            chrome.storage.session.set({ "ack": ack })
+
+            response = {
+                "response": "RULE_DELETED"
+            }
             break
         default:
             response = {
