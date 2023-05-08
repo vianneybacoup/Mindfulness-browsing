@@ -24,7 +24,8 @@ chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
             }
             else if (ack[message.host]) {
                 response = {
-                    "response": "ALREADY_ACK"
+                    "response": "ALREADY_ACK",
+                    "timeout": rules[message.host].timeout
                 }
             } else {
                 response = {
