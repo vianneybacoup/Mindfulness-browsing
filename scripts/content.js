@@ -8,7 +8,7 @@ function overlay(timeout) {
   newDiv.style.position = "fixed";
   newDiv.style.top = "0px";
   newDiv.style.left = "0px";
-  newDiv.style.zIndex = 1000;
+  newDiv.style.zIndex = 2147483647;
 
   const temp = document.createTextNode(window.location.host);
   newDiv.append(temp)
