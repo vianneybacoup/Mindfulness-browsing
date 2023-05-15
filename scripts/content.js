@@ -8,10 +8,19 @@ function overlay(timeout) {
   newDiv.style.position = "fixed";
   newDiv.style.top = "0px";
   newDiv.style.left = "0px";
-  newDiv.style.zIndex = 2147483647;
+  newDiv.style.justifyContent = "center"
+  newDiv.style.alignItems = "center"
+  newDiv.style.display = "flex"
+  newDiv.style.zIndex = 2147483646;
 
-  const temp = document.createTextNode(window.location.host);
-  newDiv.append(temp)
+  const newDiv2 = document.createElement("div");
+  newDiv2.style.fontSize = "50px"
+  newDiv2.style.zIndex = 2147483647;
+
+  const temp = document.createTextNode("Hey, you are starting " + window.location.hostname + "!");
+
+  newDiv2.append(temp)
+  newDiv.append(newDiv2)
 
   document.body.append(newDiv)
 
