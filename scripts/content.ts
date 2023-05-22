@@ -1,5 +1,3 @@
-import { Rule } from "./Rule"
-
 function overlay(timeout: number) {
     const newDiv: HTMLDivElement = document.createElement("div")
     newDiv.id = "overlay-extension"
@@ -36,8 +34,8 @@ function overlay(timeout: number) {
         chrome.runtime.sendMessage(message)
     }, timeout)
 }
-  
-  
+
+
 const message = {
     "query": "GET_RULE",
     "host": window.location.host

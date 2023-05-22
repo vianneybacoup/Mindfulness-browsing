@@ -1,5 +1,3 @@
-import { Rule } from "./Rule"
-
 const btn: HTMLButtonElement = (document.getElementById("btn")! as HTMLButtonElement)
 const timeout_elmt: HTMLInputElement = (document.getElementById("rule_timeout")! as HTMLInputElement)
 var host = ""
