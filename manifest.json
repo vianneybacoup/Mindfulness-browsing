@@ -9,11 +9,11 @@
         "https://*/*"
     ],
     "background": {
-        "service_worker": "scripts/background.js"
+        "service_worker": "dist/background.js"
     },
     "content_scripts": [
         {
-            "js": ["scripts/content.js"],
+            "js": ["dist/content.js"],
             "matches": [
                 "https://*/*"
             ]

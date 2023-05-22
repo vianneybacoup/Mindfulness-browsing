@@ -1,5 +1,7 @@
-var rules = {}
-var ack = {}
+import { Rule } from "./Rule"
+
+var rules: { [name: string]: Rule } = {}
+var ack: { [name: string]: string } = {}
 
 chrome.storage.sync.get("rules", function(result) {
     if (result.rules) {
