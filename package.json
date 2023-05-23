@@ -4,7 +4,9 @@
   "description": "We are all driven by our habits, good ones and unfortunatly bad ones. For me, some are so ingrained that I am aware of them when it's too late:\r When bored on my computer, I will go on YouTube, Reddit or any trending social media for hours, to satisfy my boredom.\r What if I could alert my conscious self that my unconscious self is accessing a problematic website?",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --config webpack/webpack.config.js"
+    "build": "webpack --config webpack/webpack.config.js",
+    "prettier:check": "npx prettier --check ./",
+    "prettier:write": "npx prettier --write ./"
   },
   "repository": {
     "type": "git",
@@ -20,6 +22,7 @@
   "devDependencies": {
     "@types/chrome": "^0.0.236",
     "copy-webpack-plugin": "^11.0.0",
+    "prettier": "2.8.8",
     "ts-loader": "^9.4.2",
     "typescript": "^5.0.4",
     "webpack": "^5.83.1",
