@@ -1,25 +1,19 @@
 {
-    "name": "Mindfulness",
-    "version": "1.0.0",
-    "manifest_version": 3,
-    "action": {
-        "default_popup": "popup/popup.html"
-    },
-    "host_permissions": [
-        "https://*/*"
-    ],
-    "background": {
-        "service_worker": "dist/background.js"
-    },
-    "content_scripts": [
-        {
-            "js": ["dist/content.js"],
-            "matches": [
-                "https://*/*"
-            ]
-        }
-    ],
-    "permissions": [
-        "storage"
-    ]
+  "name": "Mindfulness",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popup/popup.html"
+  },
+  "host_permissions": ["https://*/*"],
+  "background": {
+    "service_worker": "dist/background.js"
+  },
+  "content_scripts": [
+    {
+      "js": ["dist/content.js"],
+      "matches": ["https://*/*"]
+    }
+  ],
+  "permissions": ["storage"]
 }

@@ -1,7 +1,7 @@
 export class Rule {
-    timeout: number;
+  timeout: number;
 
-    constructor(timeout: number) {
-        this.timeout = timeout;
-    }
+  constructor(timeout: number) {
+    this.timeout = timeout;
+  }
 }
