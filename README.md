@@ -16,6 +16,7 @@ This project is to help you regain at least some control over your internet usag
 If you want to control your unconscious self when it comes to binge browsing and limit it to suit your needs, this extension is for you.
 
 ## Installation
+
 - Clone the repo
 - `npm install`
 - `npm run build`
