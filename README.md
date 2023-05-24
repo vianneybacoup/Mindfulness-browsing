@@ -14,7 +14,9 @@ This project is to help you regain at least some control over your internet usag
 If you want to control your unconscious self when it comes to binge browsing and limit it to suit your needs, this extension is for you.
 
 ## Installation
-Clone the repo and follow the [Chrome Extension Documentation](https://developer.chrome.com/docs/extensions/mv3/getstarted/development-basics/#load-unpacked) to use it on your browser.
+- Clone the repo
+- `npm run build`
+- follow the [Chrome Extension Documentation](https://developer.chrome.com/docs/extensions/mv3/getstarted/development-basics/#load-unpacked) to use it on your browser.
 
 ## Usage
 To execute this logic on a specific website:
