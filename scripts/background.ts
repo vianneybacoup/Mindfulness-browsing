@@ -42,9 +42,6 @@ chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
       rules[message.host] = { timeout: message.timeout };
       chrome.storage.sync.set({ rules: rules });
 
-      ack[message.host] = 'ack';
-      chrome.storage.session.set({ ack: ack });
-
       response = {
         response: 'RULE_ADDED',
       };
