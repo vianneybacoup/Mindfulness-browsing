@@ -15,6 +15,7 @@ If you want to control your unconscious self when it comes to binge browsing and
 
 ## Installation
 - Clone the repo
+- `npm install`
 - `npm run build`
 - follow the [Chrome Extension Documentation](https://developer.chrome.com/docs/extensions/mv3/getstarted/development-basics/#load-unpacked) to use it on your browser.
 
