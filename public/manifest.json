@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "manifest_version": 3,
   "action": {
-    "default_popup": "popup/popup.html"
+    "default_popup": "index.html"
   },
   "host_permissions": ["https://*/*"],
   "background": {
-    "service_worker": "dist/background.js"
+    "service_worker": "static/js/background.js"
   },
   "content_scripts": [
     {
-      "js": ["dist/content.js"],
+      "js": ["static/js/content.js"],
       "matches": ["https://*/*"]
     }
   ],
