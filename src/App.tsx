@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import './App.css';
+import styled from 'styled-components';
+
+const Root = styled.div`
+  height: 200px;
+  width: 200px;
+  font-size: 1.5em;
+  text-align: center;
+`;
 
 type RuleControlState =
   | 'LOADING'
@@ -69,46 +76,35 @@ const RuleControl = () => {
     });
   };
 
-  switch (state) {
-    case 'LOADING':
-      return (
-        <div>
+  return (
+    <Root>
+      {state === 'LOADING' ? (
+        <>
           <p>Loading ...</p>
-        </div>
-      );
-    case 'RULE':
-      return (
-        <div>
+        </>
+      ) : state === 'RULE' ? (
+        <>
           <p>Rule found</p>
-          <button onClick={handleRemoveRuleClick}>Remove state</button>
-        </div>
-      );
-    case 'NO_RULE':
-      return (
-        <div>
-          <p>Rule not found</p>
-          <button onClick={handleNewRuleClick}>Add state</button>
-        </div>
-      );
-    case 'NOT_AN_URL':
-      return (
-        <div>
-          <p>This page cannot run this extension</p>
-        </div>
-      );
-    case 'CONNECTION_ISSUE':
-      return (
-        <div>
+          <button onClick={handleRemoveRuleClick}>Remove rule</button>
+        </>
+      ) : state === 'CONNECTION_ISSUE' ? (
+        <>
           <p>Error in the extension</p>
-        </div>
-      );
-    default:
-      return (
-        <div>
-          <p>{state}</p>
-        </div>
-      );
-  }
+        </>
+      ) : state === 'NOT_AN_URL' ? (
+        <>
+          <p>This page cannot run this extension</p>
+        </>
+      ) : state === 'NO_RULE' ? (
+        <>
+          <p>Rule not found</p>
+          <button onClick={handleNewRuleClick}>Add rule</button>
+        </>
+      ) : (
+        <p>{state}</p>
+      )}
+    </Root>
+  );
 };
 
 export default RuleControl;
