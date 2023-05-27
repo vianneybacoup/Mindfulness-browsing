@@ -1,119 +1,114 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 
-export class RuleControl extends React.Component {
-  state = {
-    rule: 'LOADING',
-  };
-  host = '';
+type RuleControlState =
+  | 'LOADING'
+  | 'RULE'
+  | 'CONNECTION_ISSUE'
+  | 'NO_RULE'
+  | 'NOT_AN_URL';
 
-  constructor() {
-    super({});
-    this.handleNewRuleClick = this.handleNewRuleClick.bind(this);
-    this.handleRemoveRuleClick = this.handleRemoveRuleClick.bind(this);
-    this.urlReceived = this.urlReceived.bind(this);
+const RuleControl = () => {
+  const [state, setState] = useState<RuleControlState>('LOADING');
+  const [host, setHost] = useState<string>('');
 
-    this.setState({ rule: this.state.rule });
-
+  useEffect(() => {
     var query = { active: true, currentWindow: true };
-    chrome.tabs.query(query, this.urlReceived);
-  }
+    chrome.tabs.query(query, urlReceived);
+  });
 
-  urlReceived(tabs: chrome.tabs.Tab[]) {
+  const urlReceived = (tabs: chrome.tabs.Tab[]) => {
     if (tabs[0].url) {
-      this.host = new URL(tabs[0].url!).host;
+      setHost(new URL(tabs[0].url!).host);
 
       const message = {
         query: 'GET_RULE',
-        host: this.host,
+        host: host,
       };
+
       chrome.runtime.sendMessage(message, (result) => {
         if (!result) {
           console.log('POPUP: Send message GET_RULE no response');
-          this.setState({ rule: 'CONNECTION_ISSUE' });
+          setState('CONNECTION_ISSUE');
           return;
         }
 
         if (result.response != 'NO_RULE') {
-          this.setState({ rule: 'RULE' });
+          setState('RULE');
         } else {
-          this.setState({ rule: 'NO_RULE' });
+          setState('NO_RULE');
         }
       });
     } else {
-      this.setState({ rule: 'NOT_AN_URL' });
+      setState('NOT_AN_URL');
     }
-  }
+  };
 
-  handleNewRuleClick() {
+  const handleNewRuleClick = () => {
     const message = {
       query: 'ADD_RULE',
-      host: this.host,
+      host: host,
       timeout: 3000, //timeout_elmt.valueAsNumber * 1000,
     };
     chrome.runtime.sendMessage(message, (result) => {
       if (result.response == 'RULE_ADDED') {
-        this.setState({ rule: 'RULE' });
+        setState('RULE');
       }
     });
-  }
+  };
 
-  handleRemoveRuleClick() {
+  const handleRemoveRuleClick = () => {
     const message = {
       query: 'DELETE_RULE',
-      host: this.host,
+      host: host,
     };
     chrome.runtime.sendMessage(message, (result) => {
       if (result.response == 'RULE_DELETED') {
-        this.setState({ rule: 'NO_RULE' });
+        setState('NO_RULE');
       }
     });
-  }
+  };
 
-  render() {
-    let ret = <></>;
-    const rule = this.state.rule;
-
-    if (rule == 'LOADING') {
-      ret = (
+  switch (state) {
+    case 'LOADING':
+      return (
         <div>
           <p>Loading ...</p>
         </div>
       );
-    } else if (rule == 'RULE') {
-      ret = (
+    case 'RULE':
+      return (
         <div>
           <p>Rule found</p>
-          <button onClick={this.handleRemoveRuleClick}>Remove rule</button>
+          <button onClick={handleRemoveRuleClick}>Remove state</button>
         </div>
       );
-    } else if (rule == 'NO_RULE') {
-      ret = (
+    case 'NO_RULE':
+      return (
         <div>
           <p>Rule not found</p>
-          <button onClick={this.handleNewRuleClick}>Add rule</button>
+          <button onClick={handleNewRuleClick}>Add state</button>
         </div>
       );
-    } else if (rule == 'NOT_AN_URL') {
-      ret = (
+    case 'NOT_AN_URL':
+      return (
         <div>
           <p>This page cannot run this extension</p>
         </div>
       );
-    } else if (rule == 'CONNECTION_ISSUE') {
-      ret = (
+    case 'CONNECTION_ISSUE':
+      return (
         <div>
           <p>Error in the extension</p>
         </div>
       );
-    } else {
-      ret = (
+    default:
+      return (
         <div>
-          <p>{rule}</p>
+          <p>{state}</p>
         </div>
       );
-    }
-
-    return <>{ret}</>;
   }
-}
+};
+
+export default RuleControl;
