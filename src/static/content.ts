@@ -45,4 +45,4 @@ chrome.runtime.sendMessage(message, (result) => {
   if (result.response == 'RULE_FOUND') overlay(result.timeout);
 });
 
-export default undefined
+export default undefined;

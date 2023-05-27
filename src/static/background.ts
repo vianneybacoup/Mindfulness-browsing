@@ -66,4 +66,4 @@ chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
   sendResponse(response);
 });
 
-export default undefined
+export default undefined;
