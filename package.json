@@ -1,31 +1,48 @@
 {
   "name": "chrome_extension",
-  "version": "1.0.0",
-  "description": "We are all driven by our habits, good ones and unfortunatly bad ones. For me, some are so ingrained that I am aware of them when it's too late:\r When bored on my computer, I will go on YouTube, Reddit or any trending social media for hours, to satisfy my boredom.\r What if I could alert my conscious self that my unconscious self is accessing a problematic website?",
-  "main": "index.js",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@craco/craco": "^5.9.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.32",
+    "@types/react": "^18.2.7",
+    "@types/react-dom": "^18.2.4",
+    "prettier": "^2.8.8",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^2.1.3",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4"
+  },
   "scripts": {
-    "build": "webpack --config webpack/webpack.config.js",
-    "prettier:check": "npx prettier --check ./",
-    "prettier:write": "npx prettier --write ./"
+    "start": "react-scripts start",
+    "build": "set INLINE_RUNTIME_CHUNK=false&&craco build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/syrald/chrome_extension.git"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/syrald/chrome_extension/issues"
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
-  "homepage": "https://github.com/syrald/chrome_extension#readme",
   "devDependencies": {
-    "@types/chrome": "^0.0.236",
-    "copy-webpack-plugin": "^11.0.0",
-    "prettier": "2.8.8",
-    "ts-loader": "^9.4.2",
-    "typescript": "^5.0.4",
-    "webpack": "^5.83.1",
-    "webpack-cli": "^5.1.1"
+    "@types/chrome": "^0.0.237"
   }
 }
