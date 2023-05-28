@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import RuleControl from './App';
+import AppContextProvider from './context';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -8,6 +9,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <RuleControl />
+    <AppContextProvider>
+      <RuleControl />
+    </AppContextProvider>
   </React.StrictMode>,
 );

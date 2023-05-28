@@ -1,23 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-
-const Root = styled.div`
-  height: 200px;
-  width: 200px;
-  font-size: 1.5em;
-  text-align: center;
-`;
-
-type RuleControlState =
-  | 'LOADING'
-  | 'RULE'
-  | 'CONNECTION_ISSUE'
-  | 'NO_RULE'
-  | 'NOT_AN_URL';
+import React, { useContext, useEffect } from 'react';
+import Root from './components/Root';
+import { AppContext } from './context';
+import AddRuleView from './views/AddRuleView';
+import EditRuleView from './views/EditRuleView';
 
 const RuleControl = () => {
-  const [state, setState] = useState<RuleControlState>('LOADING');
-  const [host, setHost] = useState<string>('');
+  const { host, setHost, state, setState } = useContext(AppContext);
 
   useEffect(() => {
     var query = { active: true, currentWindow: true };
@@ -51,31 +39,6 @@ const RuleControl = () => {
     }
   };
 
-  const handleNewRuleClick = () => {
-    const message = {
-      query: 'ADD_RULE',
-      host: host,
-      timeout: 3000, //timeout_elmt.valueAsNumber * 1000,
-    };
-    chrome.runtime.sendMessage(message, (result) => {
-      if (result.response == 'RULE_ADDED') {
-        setState('RULE');
-      }
-    });
-  };
-
-  const handleRemoveRuleClick = () => {
-    const message = {
-      query: 'DELETE_RULE',
-      host: host,
-    };
-    chrome.runtime.sendMessage(message, (result) => {
-      if (result.response == 'RULE_DELETED') {
-        setState('NO_RULE');
-      }
-    });
-  };
-
   return (
     <Root>
       {state === 'LOADING' ? (
@@ -83,10 +46,7 @@ const RuleControl = () => {
           <p>Loading ...</p>
         </>
       ) : state === 'RULE' ? (
-        <>
-          <p>Rule found</p>
-          <button onClick={handleRemoveRuleClick}>Remove rule</button>
-        </>
+        <EditRuleView />
       ) : state === 'CONNECTION_ISSUE' ? (
         <>
           <p>Error in the extension</p>
@@ -96,10 +56,7 @@ const RuleControl = () => {
           <p>This page cannot run this extension</p>
         </>
       ) : state === 'NO_RULE' ? (
-        <>
-          <p>Rule not found</p>
-          <button onClick={handleNewRuleClick}>Add rule</button>
-        </>
+        <AddRuleView />
       ) : (
         <p>{state}</p>
       )}
