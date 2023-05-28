@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context';
 
-const DEFAULT_TIMEOUT = 3000;
+const DEFAULT_TIMEOUT = 3;
 
 const AddRuleView = () => {
   const { host, setState } = useContext(AppContext);
