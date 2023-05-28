@@ -1,12 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { AppContext } from './context';
-
-const Root = styled.div`
-  height: 200px;
-  width: 200px;
-  font-size: 1.5em;
-  text-align: center;
-`;
+import Root from './components/Root';
 
 const RuleControl = () => {
   const { host, setHost, state, setState } = useContext(AppContext);
