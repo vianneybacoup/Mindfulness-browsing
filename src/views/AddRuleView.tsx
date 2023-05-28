@@ -1,14 +1,21 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { AppContext } from '../context';
+
+const DEFAULT_TIMEOUT = 3000;
 
 const AddRuleView = () => {
   const { host, setState } = useContext(AppContext);
+  const [time, setTime] = useState<number>(DEFAULT_TIMEOUT);
+
+  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTime(event.target.value as unknown as number);
+  };
 
   const onAddRule = () => {
     const message = {
       query: 'ADD_RULE',
       host: host,
-      timeout: 3000, //timeout_elmt.valueAsNumber * 1000,
+      timeout: time * 1000,
     };
 
     chrome.runtime.sendMessage(message, (result) => {
@@ -22,6 +29,7 @@ const AddRuleView = () => {
     <>
       <p>{host}</p>
       <p>Rule not found</p>
+      <input type="number" onChange={onInputChange} value={time} />
       <button onClick={onAddRule}>Add rule</button>
     </>
   );
