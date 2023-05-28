@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { AppContext } from './context';
 import Root from './components/Root';
+import EditRuleView from './views/EditRuleView';
 
 const RuleControl = () => {
   const { host, setHost, state, setState } = useContext(AppContext);
@@ -50,18 +51,6 @@ const RuleControl = () => {
     });
   };
 
-  const handleRemoveRuleClick = () => {
-    const message = {
-      query: 'DELETE_RULE',
-      host: host,
-    };
-    chrome.runtime.sendMessage(message, (result) => {
-      if (result.response == 'RULE_DELETED') {
-        setState('NO_RULE');
-      }
-    });
-  };
-
   return (
     <Root>
       {state === 'LOADING' ? (
@@ -69,10 +58,7 @@ const RuleControl = () => {
           <p>Loading ...</p>
         </>
       ) : state === 'RULE' ? (
-        <>
-          <p>Rule found</p>
-          <button onClick={handleRemoveRuleClick}>Remove rule</button>
-        </>
+        <EditRuleView />
       ) : state === 'CONNECTION_ISSUE' ? (
         <>
           <p>Error in the extension</p>
