@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import React, { useContext, useEffect } from 'react';
+import { AppContext } from './context';
 
 const Root = styled.div`
   height: 200px;
@@ -8,16 +8,8 @@ const Root = styled.div`
   text-align: center;
 `;
 
-type RuleControlState =
-  | 'LOADING'
-  | 'RULE'
-  | 'CONNECTION_ISSUE'
-  | 'NO_RULE'
-  | 'NOT_AN_URL';
-
 const RuleControl = () => {
-  const [state, setState] = useState<RuleControlState>('LOADING');
-  const [host, setHost] = useState<string>('');
+  const { host, setHost, state, setState } = useContext(AppContext);
 
   useEffect(() => {
     var query = { active: true, currentWindow: true };
