@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
-import { AppContext } from './context';
 import Root from './components/Root';
+import { AppContext } from './context';
+import AddRuleView from './views/AddRuleView';
 import EditRuleView from './views/EditRuleView';
 
 const RuleControl = () => {
@@ -38,19 +39,6 @@ const RuleControl = () => {
     }
   };
 
-  const handleNewRuleClick = () => {
-    const message = {
-      query: 'ADD_RULE',
-      host: host,
-      timeout: 3000, //timeout_elmt.valueAsNumber * 1000,
-    };
-    chrome.runtime.sendMessage(message, (result) => {
-      if (result.response == 'RULE_ADDED') {
-        setState('RULE');
-      }
-    });
-  };
-
   return (
     <Root>
       {state === 'LOADING' ? (
@@ -68,10 +56,7 @@ const RuleControl = () => {
           <p>This page cannot run this extension</p>
         </>
       ) : state === 'NO_RULE' ? (
-        <>
-          <p>Rule not found</p>
-          <button onClick={handleNewRuleClick}>Add rule</button>
-        </>
+        <AddRuleView />
       ) : (
         <p>{state}</p>
       )}
