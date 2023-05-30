@@ -1,8 +1,10 @@
 import React, { useContext, useEffect } from 'react';
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Root from './components/Root';
 import { AppContext } from './context';
-import AddRuleView from './views/AddRuleView';
-import EditRuleView from './views/EditRuleView';
+import Overview from './views/Overview';
+import Rule from './views/Rule';
+import Settings from './views/Settings';
 
 const RuleControl = () => {
   const { host, setHost, state, setState } = useContext(AppContext);
@@ -40,27 +42,16 @@ const RuleControl = () => {
   };
 
   return (
-    <Root>
-      {state === 'LOADING' ? (
-        <>
-          <p>Loading ...</p>
-        </>
-      ) : state === 'RULE' ? (
-        <EditRuleView />
-      ) : state === 'CONNECTION_ISSUE' ? (
-        <>
-          <p>Error in the extension</p>
-        </>
-      ) : state === 'NOT_AN_URL' ? (
-        <>
-          <p>This page cannot run this extension</p>
-        </>
-      ) : state === 'NO_RULE' ? (
-        <AddRuleView />
-      ) : (
-        <p>{state}</p>
-      )}
-    </Root>
+    <HashRouter>
+      <Root>
+        <Routes>
+          <Route path="/" element={<Navigate to="/rule" />} />
+          <Route path="/overview" element={<Overview />} />
+          <Route path="/rule" element={<Rule />} />
+          <Route path="/settings" element={<Settings />} />
+        </Routes>
+      </Root>
+    </HashRouter>
   );
 };
 
