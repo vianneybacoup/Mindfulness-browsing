@@ -4,11 +4,7 @@ module.exports = {
       return {
         ...webpackConfig,
         entry: {
-          main: [
-            env === 'development' &&
-              require.resolve('react-dev-utils/webpackHotDevClient'),
-            paths.appIndexJs,
-          ].filter(Boolean),
+          popup: './src/index.tsx',
           content: './src/static/content.ts',
           background: './src/static/background.ts',
         },
