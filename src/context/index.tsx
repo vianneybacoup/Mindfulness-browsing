@@ -16,9 +16,9 @@ type AppContextProps = {
 
 const initialAppContext: AppContextProps = {
   host: '',
-  setHost: (host: string) => {},
+  setHost: (_: string) => {},
   state: 'LOADING',
-  setState: (state: RuleState) => {},
+  setState: (_: string) => {},
 };
 
 export const AppContext = createContext<AppContextProps>(initialAppContext);
