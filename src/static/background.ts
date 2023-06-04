@@ -1,7 +1,7 @@
 import { Rule } from './Rule';
 
-var rules: { [name: string]: Rule } = {};
-var ack: { [name: string]: string } = {};
+let rules: { [name: string]: Rule } = {};
+let ack: { [name: string]: string } = {};
 
 chrome.storage.sync.get('rules', function (result) {
   if (result.rules) {
@@ -15,7 +15,7 @@ chrome.storage.session.get('ack', function (result) {
 });
 
 chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
-  var response = {};
+  let response = {};
   switch (message.query) {
     case 'GET_RULE':
       if (rules[message.host] == undefined) {
@@ -39,7 +39,7 @@ chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
       chrome.storage.session.set({ ack: ack });
       break;
     case 'ADD_RULE':
-      rules[message.host] = { timeout: message.timeout };
+      rules[message.host] = new Rule(message.timeout);
       chrome.storage.sync.set({ rules: rules });
 
       response = {

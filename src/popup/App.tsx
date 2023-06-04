@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import Root from './components/Root';
 import { AppContext } from './context';
 import AddRuleView from './views/AddRuleView';
@@ -8,7 +8,7 @@ const RuleControl = () => {
   const { host, setHost, state, setState } = useContext(AppContext);
 
   useEffect(() => {
-    var query = { active: true, currentWindow: true };
+    const query = { active: true, currentWindow: true };
     chrome.tabs.query(query, urlReceived);
   });
 
