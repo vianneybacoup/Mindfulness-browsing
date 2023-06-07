@@ -1,10 +1,10 @@
-import { useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Root from './components/Root';
 import { AppContext } from './context';
 import AddRuleView from './views/AddRuleView';
 import EditRuleView from './views/EditRuleView';
 
-const RuleControl = () => {
+const RuleControl: React.FC = () => {
   const { host, setHost, state, setState } = useContext(AppContext);
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const RuleControl = () => {
 
   const urlReceived = (tabs: chrome.tabs.Tab[]) => {
     if (tabs[0].url) {
-      setHost(new URL(tabs[0].url!).host);
+      setHost(new URL(tabs[0].url).host);
 
       const message = {
         query: 'GET_RULE',

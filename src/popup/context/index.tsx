@@ -16,9 +16,11 @@ type AppContextProps = {
 
 const initialAppContext: AppContextProps = {
   host: '',
-  setHost: (_: string) => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setHost: () => {},
   state: 'LOADING',
-  setState: (_: string) => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setState: () => {},
 };
 
 export const AppContext = createContext<AppContextProps>(initialAppContext);
@@ -27,7 +29,9 @@ type AppContextProviderProps = {
   children: React.ReactElement;
 };
 
-const AppContextProvider = ({ children }: AppContextProviderProps) => {
+const AppContextProvider: React.FC<AppContextProviderProps> = ({
+  children,
+}: AppContextProviderProps) => {
   const [host, setHost] = useState<string>('');
   const [state, setState] = useState<RuleState>('LOADING');
 

@@ -1,7 +1,7 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import { AppContext } from '../context';
 
-const EditRuleView = () => {
+const EditRuleView: React.FC = () => {
   const { host, setState } = useContext(AppContext);
 
   const onRemoveRule = () => {

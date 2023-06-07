@@ -1,4 +1,6 @@
-import { Rule } from './Rule';
+type Rule = {
+  timeout: number;
+};
 
 let rules: { [name: string]: Rule } = {};
 let ack: { [name: string]: string } = {};
@@ -39,7 +41,7 @@ chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
       chrome.storage.session.set({ ack: ack });
       break;
     case 'ADD_RULE':
-      rules[message.host] = new Rule(message.timeout);
+      rules[message.host] = { timeout: message.timeout };
       chrome.storage.sync.set({ rules: rules });
 
       response = {
