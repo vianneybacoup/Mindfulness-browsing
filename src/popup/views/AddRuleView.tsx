@@ -3,7 +3,7 @@ import { AppContext } from '../context';
 
 const DEFAULT_TIMEOUT = 3;
 
-const AddRuleView = () => {
+const AddRuleView: React.FC = () => {
   const { host, setState } = useContext(AppContext);
   const [time, setTime] = useState<number>(DEFAULT_TIMEOUT);
 
