@@ -12,8 +12,13 @@
   "content_scripts": [
     {
       "js": ["src/scripts/content.js"],
+      "run_at": "document_start",
       "matches": ["<all_urls>"]
     }
   ],
+  "web_accessible_resources": [{
+    "resources": ["src/overlay/overlay.html"],
+    "matches": ["<all_urls>"]
+  }],
   "permissions": ["storage"]
 }

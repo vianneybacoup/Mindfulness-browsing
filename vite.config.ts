@@ -9,6 +9,7 @@ export default defineConfig({
       input: {
         // Entrypoints
         main: resolve(__dirname, 'src/popup/popup.html'),
+        overlay: resolve(__dirname, 'src/overlay/overlay.html'),
 
         // Static scripts files
         background: resolve(__dirname, 'src/static/background.ts'),

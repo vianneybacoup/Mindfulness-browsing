@@ -2,25 +2,34 @@ type Rule = {
   timeout: number;
 };
 
+let loaded = false;
 let rules: { [name: string]: Rule } = {};
 let ack: { [name: string]: string } = {};
 
-chrome.storage.sync.get('rules', function (result) {
-  if (result.rules) {
-    rules = result.rules;
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (!loaded) {
+    sendResponse({
+      response: 'NOT_LOADED',
+    });
+    return;
   }
-});
-chrome.storage.session.get('ack', function (result) {
-  if (result.ack) {
-    ack = result.ack;
-  }
-});
 
-chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
   let response = {};
   switch (message.query) {
     case 'GET_RULE':
-      if (rules[message.host] == undefined) {
+      if (!rules[message.host]) {
+        response = {
+          response: 'NO_RULE',
+        };
+      } else {
+        response = {
+          response: 'RULE_FOUND',
+          timeout: rules[message.host].timeout,
+        };
+      }
+      break;
+    case 'RUN_RULE':
+      if (!rules[message.host]) {
         response = {
           response: 'NO_RULE',
         };
@@ -30,15 +39,26 @@ chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
           timeout: rules[message.host].timeout,
         };
       } else {
-        response = {
-          response: 'RULE_FOUND',
-          timeout: rules[message.host].timeout,
-        };
+        if (!sender.tab || !sender.tab.url || !sender.tab.id) {
+          return {};
+        }
+        const urlParams =
+          '?url=' +
+          encodeURIComponent(sender.tab.url) +
+          '&timeout=' +
+          rules[message.host].timeout;
+        chrome.tabs.update(sender.tab.id, {
+          url: chrome.runtime.getURL('src/overlay/overlay.html') + urlParams,
+        });
       }
       break;
     case 'ACK':
       ack[message.host] = 'ack';
       chrome.storage.session.set({ ack: ack });
+      if (!sender.tab || !sender.tab.id) {
+        return {};
+      }
+      chrome.tabs.update(sender.tab.id, { url: message.url });
       break;
     case 'ADD_RULE':
       rules[message.host] = { timeout: message.timeout };
@@ -66,6 +86,18 @@ chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
       break;
   }
   sendResponse(response);
+});
+
+chrome.storage.sync.get('rules', (result) => {
+  if (result.rules) {
+    rules = result.rules;
+  }
+  loaded = true;
+});
+chrome.storage.session.get('ack', (result) => {
+  if (result.ack) {
+    ack = result.ack;
+  }
 });
 
 export default undefined;
