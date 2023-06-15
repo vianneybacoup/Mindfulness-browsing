@@ -1,4 +1,4 @@
-type Rule = {
+export type Rule = {
   timeout: number;
 };
 
@@ -6,86 +6,118 @@ let loaded = false;
 let rules: { [name: string]: Rule } = {};
 let ack: { [name: string]: string } = {};
 
+export type MessageGetRule = {
+  host: string;
+};
+function getRuleHandler(message: MessageGetRule) {
+  const hostRule = rules[message.host];
+  if (!hostRule) {
+    return { response: 'NO_RULE' };
+  }
+
+  return {
+    response: 'RULE_FOUND',
+    timeout: hostRule.timeout,
+  };
+}
+
+export type MessageRunRule = {
+  host: string;
+};
+function runRuleHandler(
+  message: MessageRunRule,
+  sender: chrome.runtime.MessageSender,
+) {
+  const hostRule = rules[message.host];
+  if (!hostRule) {
+    return { response: 'NO_RULE' };
+  }
+
+  const hostack = ack[message.host];
+  if (hostack) {
+    return { response: 'ALREADY_ACK' };
+  }
+
+  if (!sender.tab?.url || !sender.tab?.id) {
+    return {};
+  }
+
+  const urlParams =
+    '?url=' +
+    encodeURIComponent(sender.tab.url) +
+    '&timeout=' +
+    hostRule.timeout;
+  chrome.tabs.update(sender.tab.id, {
+    url: chrome.runtime.getURL('src/overlay/overlay.html') + urlParams,
+  });
+  return {};
+}
+
+export type MessageAck = {
+  host: string;
+  url: string;
+};
+function ackHandler(message: MessageAck, sender: chrome.runtime.MessageSender) {
+  if (!sender.tab?.id) {
+    return {};
+  }
+
+  ack[message.host] = 'ack';
+  chrome.storage.session.set({ ack: ack });
+  chrome.tabs.update(sender.tab.id, { url: message.url });
+  return {};
+}
+
+export type MessageAddRule = {
+  host: string;
+  timeout: number;
+};
+function addRuleHandler(message: MessageAddRule) {
+  rules[message.host] = { timeout: message.timeout };
+  chrome.storage.sync.set({ rules: rules });
+
+  return { response: 'RULE_ADDED' };
+}
+
+export type MessageDelRule = {
+  host: string;
+};
+function delRuleHandler(message: MessageDelRule) {
+  delete rules[message.host];
+  chrome.storage.sync.set({ rules: rules });
+
+  delete ack[message.host];
+  chrome.storage.session.set({ ack: ack });
+
+  return { response: 'RULE_DELETED' };
+}
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (!loaded) {
-    sendResponse({
-      response: 'NOT_LOADED',
-    });
+    sendResponse({ response: 'NOT_LOADED' });
     return;
   }
 
-  let response = {};
   switch (message.query) {
     case 'GET_RULE':
-      if (!rules[message.host]) {
-        response = {
-          response: 'NO_RULE',
-        };
-      } else {
-        response = {
-          response: 'RULE_FOUND',
-          timeout: rules[message.host].timeout,
-        };
-      }
+      sendResponse(getRuleHandler(message));
       break;
     case 'RUN_RULE':
-      if (!rules[message.host]) {
-        response = {
-          response: 'NO_RULE',
-        };
-      } else if (ack[message.host]) {
-        response = {
-          response: 'ALREADY_ACK',
-          timeout: rules[message.host].timeout,
-        };
-      } else {
-        if (!sender.tab || !sender.tab.url || !sender.tab.id) {
-          return {};
-        }
-        const urlParams =
-          '?url=' +
-          encodeURIComponent(sender.tab.url) +
-          '&timeout=' +
-          rules[message.host].timeout;
-        chrome.tabs.update(sender.tab.id, {
-          url: chrome.runtime.getURL('src/overlay/overlay.html') + urlParams,
-        });
-      }
+      sendResponse(runRuleHandler(message, sender));
       break;
     case 'ACK':
-      ack[message.host] = 'ack';
-      chrome.storage.session.set({ ack: ack });
-      if (!sender.tab || !sender.tab.id) {
-        return {};
-      }
-      chrome.tabs.update(sender.tab.id, { url: message.url });
+      sendResponse(ackHandler(message, sender));
       break;
     case 'ADD_RULE':
-      rules[message.host] = { timeout: message.timeout };
-      chrome.storage.sync.set({ rules: rules });
-
-      response = {
-        response: 'RULE_ADDED',
-      };
+      sendResponse(addRuleHandler(message));
       break;
     case 'DELETE_RULE':
-      delete rules[message.host];
-      chrome.storage.sync.set({ rules: rules });
-
-      delete ack[message.host];
-      chrome.storage.session.set({ ack: ack });
-
-      response = {
-        response: 'RULE_DELETED',
-      };
+      sendResponse(delRuleHandler(message));
       break;
     default:
-      response = {
-        response: 'QUERY_NOT_RECOGNIZED',
-      };
+      sendResponse({ response: 'QUERY_NOT_RECOGNIZED' });
       break;
   }
-  sendResponse(response);
 });
 
 chrome.storage.sync.get('rules', (result) => {
