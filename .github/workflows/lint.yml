@@ -16,5 +16,5 @@ jobs:
         uses: actions/checkout@v3
 
       - run: npm install
-      - run: npm run lint:prettier
+      - run: npm run lint:prettier:check
       - run: npm run lint:eslint

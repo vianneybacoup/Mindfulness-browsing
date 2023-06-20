@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint:eslint": "eslint . --ext .ts,.tsx",
-    "lint:prettier": "prettier --check ./src .github/workflows",
+    "lint:prettier:check": "prettier --check ./src .github/workflows",
+    "lint:prettier:write": "prettier --write ./src .github/workflows",
     "preview": "vite preview"
   },
   "dependencies": {

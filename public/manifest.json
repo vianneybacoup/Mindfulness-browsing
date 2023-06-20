@@ -5,15 +5,20 @@
   "action": {
     "default_popup": "src/popup/popup.html"
   },
-  "host_permissions": ["https://*/*"],
+  "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "src/scripts/background.js"
   },
   "content_scripts": [
     {
       "js": ["src/scripts/content.js"],
-      "matches": ["https://*/*"]
+      "run_at": "document_start",
+      "matches": ["<all_urls>"]
     }
   ],
+  "web_accessible_resources": [{
+    "resources": ["src/overlay/overlay.html"],
+    "matches": ["<all_urls>"]
+  }],
   "permissions": ["storage"]
 }
