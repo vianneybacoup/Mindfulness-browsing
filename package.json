@@ -9,7 +9,6 @@
     "lint:eslint": "eslint . --ext .ts,.tsx",
     "lint:prettier:check": "prettier --check ./src .github/workflows",
     "lint:prettier:write": "prettier --write ./src .github/workflows",
-    "preview": "vite preview",
     "prepare": "husky install"
   },
   "dependencies": {
