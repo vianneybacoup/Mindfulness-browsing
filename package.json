@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite build --watch --mode development",
     "build": "tsc && vite build",
     "lint:eslint": "eslint . --ext .ts,.tsx",
     "lint:prettier:check": "prettier --check ./src .github/workflows",
