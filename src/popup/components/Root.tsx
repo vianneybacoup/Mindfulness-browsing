@@ -1,10 +1,9 @@
-import styled from 'styled-components';
+import React, { ReactNode } from 'react';
 
-const Root = styled.div`
-  height: 200px;
-  width: 200px;
-  font-size: 1.5em;
-  text-align: center;
-`;
+const Root: React.FC<{ children: ReactNode }> = ({
+  children,
+}: {
+  children: ReactNode;
+}) => <div className="p-0 m-0 h-80 w-64">{children}</div>;
 
 export default Root;

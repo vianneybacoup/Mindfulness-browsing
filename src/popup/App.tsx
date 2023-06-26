@@ -1,11 +1,12 @@
 import React, { useContext, useEffect } from 'react';
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Root from './components/Root';
 import { AppContext } from './context';
-import AddRuleView from './views/AddRuleView';
-import EditRuleView from './views/EditRuleView';
+import AllRulesView from './views/AllRulesView';
+import RuleView from './views/RuleView';
 
 const RuleControl: React.FC = () => {
-  const { host, setHost, state, setState } = useContext(AppContext);
+  const { host, setHost, setFavicon, setState } = useContext(AppContext);
 
   useEffect(() => {
     const query = { active: true, currentWindow: true };
@@ -15,6 +16,7 @@ const RuleControl: React.FC = () => {
   const urlReceived = (tabs: chrome.tabs.Tab[]) => {
     if (tabs[0].url) {
       setHost(new URL(tabs[0].url).host);
+      setFavicon(tabs[0].favIconUrl || '');
 
       const message = {
         query: 'GET_RULE',
@@ -40,27 +42,15 @@ const RuleControl: React.FC = () => {
   };
 
   return (
-    <Root>
-      {state === 'LOADING' ? (
-        <>
-          <p>Loading ...</p>
-        </>
-      ) : state === 'RULE' ? (
-        <EditRuleView />
-      ) : state === 'CONNECTION_ISSUE' ? (
-        <>
-          <p>Error in the extension</p>
-        </>
-      ) : state === 'NOT_AN_URL' ? (
-        <>
-          <p>This page cannot run this extension</p>
-        </>
-      ) : state === 'NO_RULE' ? (
-        <AddRuleView />
-      ) : (
-        <p>{state}</p>
-      )}
-    </Root>
+    <HashRouter>
+      <Root>
+        <Routes>
+          <Route path="/" element={<Navigate to="/rule" />} />
+          <Route path="/all" element={<AllRulesView />} />
+          <Route path="/rule" element={<RuleView />} />
+        </Routes>
+      </Root>
+    </HashRouter>
   );
 };
 
