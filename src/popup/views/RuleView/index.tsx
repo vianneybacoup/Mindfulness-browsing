@@ -1,12 +1,8 @@
-import React, { useContext } from 'react';
-import { AppContext } from '../../context';
-import RuleBox from './components/RuleBox';
+import React from 'react';
 import Header from './components/Header';
+import RuleBox from './components/RuleBox';
 
 const RuleView: React.FC = () => {
-  const { state } = useContext(AppContext);
-  console.log(state);
-
   return (
     <>
       <Header />

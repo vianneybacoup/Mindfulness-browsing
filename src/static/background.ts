@@ -2,8 +2,10 @@ export type Rule = {
   timeout: number;
 };
 
+export type Rules = { [name: string]: Rule };
+
 let loaded = false;
-let rules: { [name: string]: Rule } = {};
+let rules: Rules = {};
 let ack: { [name: string]: string } = {};
 
 export type MessageGetRule = {
@@ -18,6 +20,13 @@ function getRuleHandler(message: MessageGetRule) {
   return {
     response: 'RULE_FOUND',
     timeout: hostRule.timeout,
+  };
+}
+
+function getAllRulesHandler() {
+  return {
+    response: 'ALL_RULES_FOUND',
+    rules,
   };
 }
 
@@ -101,6 +110,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message.query) {
     case 'GET_RULE':
       sendResponse(getRuleHandler(message));
+      break;
+    case 'GET_ALL_RULES':
+      sendResponse(getAllRulesHandler());
       break;
     case 'RUN_RULE':
       sendResponse(runRuleHandler(message, sender));
