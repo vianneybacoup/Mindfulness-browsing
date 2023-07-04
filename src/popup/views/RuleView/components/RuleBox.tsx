@@ -18,8 +18,8 @@ const RuleBox: React.FC = () => {
   const favicon = location.state ? rules[host].favicon : currentFavicon;
   const active = !!Object.keys(rules).find((rule) => rule === host);
 
-  const onTimeoutChange = (e) => {
-    setTimeout(e.target.value);
+  const onTimeoutChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setTimeout(Number(e.target.value));
   };
 
   const onAddRule = () => {
@@ -83,6 +83,7 @@ const RuleBox: React.FC = () => {
           placeholder="timeout"
           value={timeout}
           onChange={onTimeoutChange}
+          type="number"
         />
 
         {active ? (
