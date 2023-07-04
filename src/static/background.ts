@@ -20,12 +20,10 @@ export type GetAllRulesResponse = {
   rules: Rules;
 };
 
-function getAllRulesHandler(): GetAllRulesResponse {
-  return {
-    response: 'ALL_RULES_FOUND',
-    rules,
-  };
-}
+const getAllRulesHandler = (): GetAllRulesResponse => ({
+  response: 'ALL_RULES_FOUND',
+  rules,
+});
 
 export type RunRuleMessage = {
   query: 'RUN_RULE';
@@ -36,10 +34,10 @@ export type RunRuleResponse = {
   response?: 'NO_RULE' | 'ALREADY_ACK' | GenericResponse;
 };
 
-function runRuleHandler(
+const runRuleHandler = (
   { host }: RunRuleMessage,
   sender: chrome.runtime.MessageSender,
-): RunRuleResponse {
+): RunRuleResponse => {
   const rule = rules[host];
   if (!rule) {
     return { response: 'NO_RULE' };
@@ -60,7 +58,7 @@ function runRuleHandler(
     url: chrome.runtime.getURL('src/overlay/overlay.html') + urlParams,
   });
   return {};
-}
+};
 
 export type AckMessage = {
   query: 'ACK';
@@ -72,10 +70,10 @@ export type AckResponse = {
   response?: 'ACK' | GenericResponse;
 };
 
-function ackHandler(
+const ackHandler = (
   { host, url }: AckMessage,
   sender: chrome.runtime.MessageSender,
-): AckResponse {
+): AckResponse => {
   if (!sender.tab?.id) {
     return {};
   }
@@ -84,7 +82,7 @@ function ackHandler(
   chrome.storage.session.set({ ack });
   chrome.tabs.update(sender.tab.id, { url });
   return { response: 'ACK' };
-}
+};
 
 export type AddRuleMessage = {
   query: 'ADD_RULE';
@@ -96,12 +94,12 @@ export type AddRuleResponse = {
   response: 'RULE_ADDED' | GenericResponse;
 };
 
-function addRuleHandler({ host, rule }: AddRuleMessage): AddRuleResponse {
+const addRuleHandler = ({ host, rule }: AddRuleMessage): AddRuleResponse => {
   rules[host] = rule;
   chrome.storage.sync.set({ rules });
 
   return { response: 'RULE_ADDED' };
-}
+};
 
 export type DeleteRuleMessage = {
   query: 'DELETE_RULE';
@@ -112,7 +110,7 @@ export type DeleteRuleResponse = {
   response: 'RULE_DELETED' | GenericResponse;
 };
 
-function delRuleHandler({ host }: DeleteRuleMessage): DeleteRuleResponse {
+const delRuleHandler = ({ host }: DeleteRuleMessage): DeleteRuleResponse => {
   delete rules[host];
   chrome.storage.sync.set({ rules });
 
@@ -120,7 +118,7 @@ function delRuleHandler({ host }: DeleteRuleMessage): DeleteRuleResponse {
   chrome.storage.session.set({ ack });
 
   return { response: 'RULE_DELETED' };
-}
+};
 
 export type Message =
   | AddRuleMessage
