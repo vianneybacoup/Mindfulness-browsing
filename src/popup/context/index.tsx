@@ -2,7 +2,7 @@ import React, { createContext, useCallback, useEffect, useState } from 'react';
 // eslint-disable-next-line import/no-unresolved
 import { Rules } from '../../static/background';
 
-type AppState = 'LOADING' | 'CONNECTION_ISSUE' | 'NOT_AN_URL';
+type AppState = 'LOADING' | 'READY' | 'CONNECTION_ISSUE' | 'NOT_AN_URL';
 
 type AppContextProps = {
   host: string;
@@ -61,7 +61,17 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({
 
       console.log(result);
 
-      if (result.response === 'ALL_RULES_FOUND') setRules(result.rules);
+      if (result.response === 'NOT_LOADED') {
+        setTimeout(() => fetchAllRules(), 1000);
+        setState('LOADING');
+        return;
+      }
+
+      if (result.response === 'ALL_RULES_FOUND') {
+        setRules(result.rules);
+        setState('READY');
+        return;
+      }
     });
   }, []);
 
