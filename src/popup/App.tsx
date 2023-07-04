@@ -1,10 +1,10 @@
+import Root from '@popup/components/Root';
+import { AppContext } from '@popup/context';
+import AllRulesView from '@popup/views/AllRulesView';
+import LoadingView from '@popup/views/LoadingView';
+import RuleView from '@popup/views/RuleView';
 import React, { useContext } from 'react';
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
-import Root from './components/Root';
-import { AppContext } from './context';
-import AllRulesView from './views/AllRulesView';
-import LoadingView from './views/LoadingView';
-import RuleView from './views/RuleView';
 
 const RuleControl: React.FC = () => {
   const { state } = useContext(AppContext);

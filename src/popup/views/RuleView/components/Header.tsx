@@ -1,8 +1,8 @@
+import { AppContext } from '@popup/context';
 import React, { useContext } from 'react';
 import { AiOutlineAppstore } from 'react-icons/ai';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AppContext } from '../../../context';
 
 const Header: React.FC = () => {
   const { host, favicon, rules } = useContext(AppContext);

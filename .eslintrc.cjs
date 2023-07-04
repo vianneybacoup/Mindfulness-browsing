@@ -16,6 +16,15 @@ module.exports = {
       node: {
         paths: ['src'],
         extensions: ['.tx', '.tsx']
+      },
+      alias: {
+        map: [
+          ['@overlay', './src/overlay'],
+          ['@popup', './src/popup'],
+          ['@background', './src/static/background.ts'],
+          ['@content', './src/static/content.ts'],
+        ],
+        extensions: ['.ts', '.tsx']
       }
     }
   },

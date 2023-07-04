@@ -1,8 +1,8 @@
+import { AppContext } from '@popup/context';
 import React, { useContext } from 'react';
 import { AiOutlineRight } from 'react-icons/ai';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../../context';
 
 const AllRulesView: React.FC = () => {
   const { rules } = useContext(AppContext);

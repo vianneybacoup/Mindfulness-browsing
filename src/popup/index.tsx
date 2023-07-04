@@ -1,9 +1,8 @@
+import RuleControl from '@popup/App';
+import AppContextProvider from '@popup/context';
+import '@popup/css/index.css';
 import React from 'react';
-// eslint-disable-next-line import/no-unresolved
 import ReactDOM from 'react-dom/client';
-import RuleControl from './App';
-import AppContextProvider from './context';
-import './css/index.css';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,

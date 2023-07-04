@@ -1,5 +1,12 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@overlay/*": ["src/overlay/*"],
+      "@popup/*": ["src/popup/*"],
+      "@background": ["src/static/background.ts"],
+      "@content/*": ["src/static/content*"],
+    },
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],

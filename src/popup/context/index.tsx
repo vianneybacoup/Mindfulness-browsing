@@ -1,6 +1,5 @@
+import { Rules } from '@background';
 import React, { createContext, useCallback, useEffect, useState } from 'react';
-// eslint-disable-next-line import/no-unresolved
-import { Rules } from '../../static/background';
 
 type AppState = 'LOADING' | 'READY' | 'CONNECTION_ISSUE' | 'NOT_AN_URL';
 

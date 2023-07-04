@@ -1,8 +1,8 @@
+import Input from '@popup/components/Input';
+import { AppContext } from '@popup/context';
 import React, { useContext, useEffect, useState } from 'react';
 import { FiShield, FiShieldOff } from 'react-icons/fi';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Input from '../../../../overlay/components/Input';
-import { AppContext } from '../../../context';
 
 const RuleBox: React.FC = () => {
   const {
