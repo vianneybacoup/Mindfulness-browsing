@@ -9,21 +9,6 @@ let loaded = false;
 let rules: Rules = {};
 let ack: { [name: string]: string } = {};
 
-export type MessageGetRule = {
-  host: string;
-};
-function getRuleHandler({ host }: MessageGetRule) {
-  const rule = rules[host];
-  if (!rule) {
-    return { response: 'NO_RULE' };
-  }
-
-  return {
-    response: 'RULE_FOUND',
-    rule,
-  };
-}
-
 function getAllRulesHandler() {
   return {
     response: 'ALL_RULES_FOUND',
@@ -109,9 +94,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   switch (message.query) {
-    case 'GET_RULE':
-      sendResponse(getRuleHandler(message));
-      break;
     case 'GET_ALL_RULES':
       sendResponse(getAllRulesHandler());
       break;
