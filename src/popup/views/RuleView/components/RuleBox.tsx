@@ -1,3 +1,9 @@
+import {
+  AddRuleMessage,
+  AddRuleResponse,
+  DeleteRuleMessage,
+  DeleteRuleResponse,
+} from '@background';
 import Input from '@popup/components/Input';
 import { AppContext } from '@popup/context';
 import React, { useContext, useEffect, useState } from 'react';
@@ -23,34 +29,40 @@ const RuleBox: React.FC = () => {
   };
 
   const onAddRule = () => {
-    const message = {
+    const message: AddRuleMessage = {
       query: 'ADD_RULE',
       host: host,
       rule: { timeout: timeout * 1000, favicon },
     };
 
-    chrome.runtime.sendMessage(message, (result) => {
-      if (result.response == 'RULE_ADDED') {
-        console.log('rule added');
-        fetchAllRules();
-      }
-    });
+    chrome.runtime.sendMessage<AddRuleMessage, AddRuleResponse>(
+      message,
+      (result) => {
+        if (result.response == 'RULE_ADDED') {
+          console.log('rule added');
+          fetchAllRules();
+        }
+      },
+    );
 
     if (location.state) navigate(-1);
   };
 
   const onRemoveRule = () => {
-    const message = {
+    const message: DeleteRuleMessage = {
       query: 'DELETE_RULE',
       host,
     };
 
-    chrome.runtime.sendMessage(message, (result) => {
-      if (result.response == 'RULE_DELETED') {
-        console.log('rule deleted');
-        fetchAllRules();
-      }
-    });
+    chrome.runtime.sendMessage<DeleteRuleMessage, DeleteRuleResponse>(
+      message,
+      (result) => {
+        if (result.response == 'RULE_DELETED') {
+          console.log('rule deleted');
+          fetchAllRules();
+        }
+      },
+    );
 
     if (location.state) navigate(-1);
   };

@@ -1,4 +1,4 @@
-import { Rules } from '@background';
+import { GetAllRulesMessage, GetAllRulesResponse, Rules } from '@background';
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 
 type AppState = 'LOADING' | 'READY' | 'CONNECTION_ISSUE' | 'NOT_AN_URL';
@@ -47,31 +47,34 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({
   const [rules, setRules] = useState<Rules>(initialAppContext.rules);
 
   const fetchAllRules = useCallback(() => {
-    const message = {
+    const message: GetAllRulesMessage = {
       query: 'GET_ALL_RULES',
     };
 
-    chrome.runtime.sendMessage(message, (result) => {
-      if (!result) {
-        console.log('POPUP: Send message GET_ALL_RULES no response');
-        setState('CONNECTION_ISSUE');
-        return;
-      }
+    chrome.runtime.sendMessage<GetAllRulesMessage, GetAllRulesResponse>(
+      message,
+      (result) => {
+        if (!result) {
+          console.log('POPUP: Send message GET_ALL_RULES no response');
+          setState('CONNECTION_ISSUE');
+          return;
+        }
 
-      console.log(result);
+        console.log(result);
 
-      if (result.response === 'NOT_LOADED') {
-        setTimeout(() => fetchAllRules(), 1000);
-        setState('LOADING');
-        return;
-      }
+        if (result.response === 'NOT_LOADED') {
+          setTimeout(() => fetchAllRules(), 1000);
+          setState('LOADING');
+          return;
+        }
 
-      if (result.response === 'ALL_RULES_FOUND') {
-        setRules(result.rules);
-        setState('READY');
-        return;
-      }
-    });
+        if (result.response === 'ALL_RULES_FOUND') {
+          setRules(result.rules);
+          setState('READY');
+          return;
+        }
+      },
+    );
   }, []);
 
   useEffect(() => {
