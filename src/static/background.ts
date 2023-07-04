@@ -1,5 +1,6 @@
 export type Rule = {
   timeout: number;
+  favicon: string;
 };
 
 export type Rules = { [name: string]: Rule };
@@ -11,15 +12,15 @@ let ack: { [name: string]: string } = {};
 export type MessageGetRule = {
   host: string;
 };
-function getRuleHandler(message: MessageGetRule) {
-  const hostRule = rules[message.host];
-  if (!hostRule) {
+function getRuleHandler({ host }: MessageGetRule) {
+  const rule = rules[host];
+  if (!rule) {
     return { response: 'NO_RULE' };
   }
 
   return {
     response: 'RULE_FOUND',
-    timeout: hostRule.timeout,
+    rule,
   };
 }
 
@@ -34,15 +35,15 @@ export type MessageRunRule = {
   host: string;
 };
 function runRuleHandler(
-  message: MessageRunRule,
+  { host }: MessageRunRule,
   sender: chrome.runtime.MessageSender,
 ) {
-  const hostRule = rules[message.host];
-  if (!hostRule) {
+  const rule = rules[host];
+  if (!rule) {
     return { response: 'NO_RULE' };
   }
 
-  const hostack = ack[message.host];
+  const hostack = ack[host];
   if (hostack) {
     return { response: 'ALREADY_ACK' };
   }
@@ -52,10 +53,7 @@ function runRuleHandler(
   }
 
   const urlParams =
-    '?url=' +
-    encodeURIComponent(sender.tab.url) +
-    '&timeout=' +
-    hostRule.timeout;
+    '?url=' + encodeURIComponent(sender.tab.url) + '&timeout=' + rule.timeout;
   chrome.tabs.update(sender.tab.id, {
     url: chrome.runtime.getURL('src/overlay/overlay.html') + urlParams,
   });
@@ -66,24 +64,27 @@ export type MessageAck = {
   host: string;
   url: string;
 };
-function ackHandler(message: MessageAck, sender: chrome.runtime.MessageSender) {
+function ackHandler(
+  { host, url }: MessageAck,
+  sender: chrome.runtime.MessageSender,
+) {
   if (!sender.tab?.id) {
     return {};
   }
 
-  ack[message.host] = 'ack';
-  chrome.storage.session.set({ ack: ack });
-  chrome.tabs.update(sender.tab.id, { url: message.url });
+  ack[host] = 'ack';
+  chrome.storage.session.set({ ack });
+  chrome.tabs.update(sender.tab.id, { url });
   return {};
 }
 
 export type MessageAddRule = {
   host: string;
-  timeout: number;
+  rule: Rule;
 };
-function addRuleHandler(message: MessageAddRule) {
-  rules[message.host] = { timeout: message.timeout };
-  chrome.storage.sync.set({ rules: rules });
+function addRuleHandler({ host, rule }: MessageAddRule) {
+  rules[host] = rule;
+  chrome.storage.sync.set({ rules });
 
   return { response: 'RULE_ADDED' };
 }
@@ -91,12 +92,12 @@ function addRuleHandler(message: MessageAddRule) {
 export type MessageDelRule = {
   host: string;
 };
-function delRuleHandler(message: MessageDelRule) {
-  delete rules[message.host];
-  chrome.storage.sync.set({ rules: rules });
+function delRuleHandler({ host }: MessageDelRule) {
+  delete rules[host];
+  chrome.storage.sync.set({ rules });
 
-  delete ack[message.host];
-  chrome.storage.session.set({ ack: ack });
+  delete ack[host];
+  chrome.storage.session.set({ ack });
 
   return { response: 'RULE_DELETED' };
 }

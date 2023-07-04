@@ -1,12 +1,22 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FiShield, FiShieldOff } from 'react-icons/fi';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Input from '../../../../overlay/components/Input';
 import { AppContext } from '../../../context';
 
 const RuleBox: React.FC = () => {
-  const { host, state, setState } = useContext(AppContext);
+  const {
+    host: currentHost,
+    favicon: currentFavicon,
+    rules,
+    fetchAllRules,
+  } = useContext(AppContext);
   const [timeout, setTimeout] = useState<number>(15);
-  const active = state === 'RULE';
+  const location = useLocation();
+  const navigate = useNavigate();
+  const host = location.state ? location.state.rule : currentHost;
+  const favicon = location.state ? rules[host].favicon : currentFavicon;
+  const active = !!Object.keys(rules).find((rule) => rule === host);
 
   const onTimeoutChange = (e) => {
     setTimeout(e.target.value);
@@ -16,28 +26,40 @@ const RuleBox: React.FC = () => {
     const message = {
       query: 'ADD_RULE',
       host: host,
-      timeout: timeout * 1000,
+      rule: { timeout: timeout * 1000, favicon },
     };
 
     chrome.runtime.sendMessage(message, (result) => {
       if (result.response == 'RULE_ADDED') {
-        setState('RULE');
+        console.log('rule added');
+        fetchAllRules();
       }
     });
+
+    if (location.state) navigate(-1);
   };
 
   const onRemoveRule = () => {
     const message = {
       query: 'DELETE_RULE',
-      host: host,
+      host,
     };
 
     chrome.runtime.sendMessage(message, (result) => {
       if (result.response == 'RULE_DELETED') {
-        setState('NO_RULE');
+        console.log('rule deleted');
+        fetchAllRules();
       }
     });
+
+    if (location.state) navigate(-1);
   };
+
+  useEffect(() => {
+    if (!active) return;
+
+    setTimeout(rules[host].timeout / 1000);
+  }, [active, rules, host, location.state]);
 
   return (
     <>

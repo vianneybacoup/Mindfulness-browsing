@@ -1,23 +1,19 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useState } from 'react';
 // eslint-disable-next-line import/no-unresolved
 import { Rules } from '../../static/background';
 
-type RuleState =
-  | 'LOADING'
-  | 'RULE'
-  | 'CONNECTION_ISSUE'
-  | 'NO_RULE'
-  | 'NOT_AN_URL';
+type AppState = 'LOADING' | 'CONNECTION_ISSUE' | 'NOT_AN_URL';
 
 type AppContextProps = {
   host: string;
   setHost: (host: string) => void;
   favicon: string;
   setFavicon: (favicon: string) => void;
-  state: RuleState;
-  setState: (state: RuleState) => void;
+  state: AppState;
+  setState: (state: AppState) => void;
   rules: Rules;
   setRules: (rules: Rules) => void;
+  fetchAllRules: () => void;
 };
 
 const initialAppContext: AppContextProps = {
@@ -33,6 +29,8 @@ const initialAppContext: AppContextProps = {
   rules: {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setRules: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  fetchAllRules: () => {},
 };
 
 export const AppContext = createContext<AppContextProps>(initialAppContext);
@@ -46,46 +44,10 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({
 }: AppContextProviderProps) => {
   const [host, setHost] = useState<string>(initialAppContext.host);
   const [favicon, setFavicon] = useState<string>(initialAppContext.favicon);
-  const [state, setState] = useState<RuleState>(initialAppContext.state);
+  const [state, setState] = useState<AppState>(initialAppContext.state);
   const [rules, setRules] = useState<Rules>(initialAppContext.rules);
 
-  useEffect(() => {
-    const query = { active: true, currentWindow: true };
-    chrome.tabs.query(query, (tabs: chrome.tabs.Tab[]) => {
-      if (tabs[0].url) {
-        const newHost = new URL(tabs[0].url).host;
-        setHost(newHost);
-        setFavicon(tabs[0].favIconUrl || '');
-
-        const message = {
-          query: 'GET_RULE',
-          host: newHost,
-        };
-
-        chrome.runtime.sendMessage(message, (result) => {
-          if (!result) {
-            console.log('POPUP: Send message GET_RULE no response');
-            setState('CONNECTION_ISSUE');
-            return;
-          }
-
-          console.log(result);
-
-          if (result.response != 'NO_RULE') {
-            setState('RULE');
-          } else {
-            setState('NO_RULE');
-          }
-        });
-      } else {
-        setState('NOT_AN_URL');
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    if (state !== 'NO_RULE' && state !== 'RULE') return;
-
+  const fetchAllRules = useCallback(() => {
     const message = {
       query: 'GET_ALL_RULES',
     };
@@ -101,7 +63,21 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({
 
       if (result.response === 'ALL_RULES_FOUND') setRules(result.rules);
     });
-  }, [state]);
+  }, []);
+
+  useEffect(() => {
+    fetchAllRules();
+    const query = { active: true, currentWindow: true };
+    chrome.tabs.query(query, (tabs: chrome.tabs.Tab[]) => {
+      if (tabs[0].url) {
+        const newHost = new URL(tabs[0].url).host;
+        setHost(newHost);
+        setFavicon(tabs[0].favIconUrl || '');
+      } else {
+        setState('NOT_AN_URL');
+      }
+    });
+  }, [fetchAllRules]);
 
   return (
     <AppContext.Provider
@@ -114,6 +90,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({
         setState,
         rules,
         setRules,
+        fetchAllRules,
       }}
     >
       {children}
