@@ -74,57 +74,55 @@ const RuleBox: React.FC = () => {
   }, [active, rules, host, location.state]);
 
   return (
-    <>
-      <div className="pl-4 pr-4 flex flex-col text-sm">
-        <div className="flex flex-row items-center justify-center">
-          {active ? (
-            <div className="rounded-md bg-emerald-500 p-1 text-white">
-              <FiShield className="" size={15} />
-            </div>
-          ) : (
-            <div className="rounded-md bg-red-500 p-1 text-white">
-              <FiShieldOff className="" size={15} />
-            </div>
-          )}
+    <div className="pl-4 pr-4 flex flex-col text-sm flex-1">
+      <div className="flex flex-row items-center justify-center">
+        {active ? (
+          <div className="rounded-md bg-emerald-500 p-1 text-white">
+            <FiShield className="" size={15} />
+          </div>
+        ) : (
+          <div className="rounded-md bg-red-500 p-1 text-white">
+            <FiShieldOff className="" size={15} />
+          </div>
+        )}
 
-          <div className="p-2">{active ? 'Active' : 'No rule found'}</div>
-        </div>
+        <div className="p-2">{active ? 'Active' : 'No rule found'}</div>
+      </div>
 
-        <div className="text-xs mt-3 text-slate-500">Timeout</div>
-        <Input
-          placeholder="timeout"
-          value={timeout}
-          onChange={onTimeoutChange}
-          type="number"
-        />
+      <div className="text-xs mt-3 text-slate-500">Timeout</div>
+      <Input
+        placeholder="timeout"
+        value={timeout}
+        onChange={onTimeoutChange}
+        type="number"
+      />
 
+      <div className="mb-4 flex-1 flex flex-col items-center justify-end">
         {active ? (
           <>
             <button
-              className="p-2 mt-2 rounded-md bg-emerald-500 text-white font-semibold"
+              className="p-2 w-full rounded-md bg-emerald-500 text-white font-semibold"
               onClick={onAddRule}
             >
               Edit Rule
             </button>
             <button
-              className="p-2 mt-2 rounded-md bg-red-500 text-white font-semibold"
+              className="p-2 mt-2 w-full rounded-md bg-red-500 text-white font-semibold"
               onClick={onRemoveRule}
             >
               Delete Rule
             </button>
           </>
         ) : (
-          <>
-            <button
-              className="p-2 mt-2 rounded-md bg-emerald-500 text-white font-semibold"
-              onClick={onAddRule}
-            >
-              Create Rule
-            </button>
-          </>
+          <button
+            className="p-2 w-full rounded-md bg-emerald-500 text-white font-semibold"
+            onClick={onAddRule}
+          >
+            Create Rule
+          </button>
         )}
       </div>
-    </>
+    </div>
   );
 };
 
