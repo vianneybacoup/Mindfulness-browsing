@@ -8,7 +8,7 @@ export default defineConfig({
     alias: {
       '@overlay': path.resolve(__dirname, './src/overlay'),
       '@popup': path.resolve(__dirname, './src/popup'),
-      '@background': path.resolve(__dirname, './src/static/background.ts'),
+      '@background': path.resolve(__dirname, './src/static/background'),
       '@content': path.resolve(__dirname, './src/static/content.ts'),
     },
   },
@@ -20,7 +20,7 @@ export default defineConfig({
         overlay: resolve(__dirname, 'src/overlay/overlay.html'),
 
         // Static scripts files
-        background: resolve(__dirname, 'src/static/background.ts'),
+        background: resolve(__dirname, 'src/static/background/index.ts'),
         content: resolve(__dirname, 'src/static/content.ts'),
       },
       output: {

@@ -1,6 +1,6 @@
 import React from 'react';
 import Root from './components/Root';
-import { AckMessage, AckResponse } from '@background';
+import { AckMessage, AckResponse } from '@background/types';
 
 const OverlayControl: React.FC = () => {
   const urlParams = new URLSearchParams(window.location.search);

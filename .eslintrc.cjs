@@ -21,7 +21,7 @@ module.exports = {
         map: [
           ['@overlay', './src/overlay'],
           ['@popup', './src/popup'],
-          ['@background', './src/static/background.ts'],
+          ['@background', './src/static/background'],
           ['@content', './src/static/content.ts'],
         ],
         extensions: ['.ts', '.tsx']

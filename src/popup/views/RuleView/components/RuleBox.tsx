@@ -3,7 +3,7 @@ import {
   AddRuleResponse,
   DeleteRuleMessage,
   DeleteRuleResponse,
-} from '@background';
+} from '@background/types';
 import Input from '@popup/components/Input';
 import { AppContext } from '@popup/context';
 import React, { useContext, useEffect, useState } from 'react';

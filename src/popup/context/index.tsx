@@ -1,4 +1,8 @@
-import { GetAllRulesMessage, GetAllRulesResponse, Rules } from '@background';
+import {
+  GetAllRulesMessage,
+  GetAllRulesResponse,
+  Rules,
+} from '@background/types';
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 
 type AppState = 'LOADING' | 'READY' | 'CONNECTION_ISSUE' | 'NOT_AN_URL';

@@ -1,4 +1,4 @@
-import { RunRuleMessage, RunRuleResponse } from '@background';
+import { RunRuleMessage, RunRuleResponse } from '@background/types';
 
 const message: RunRuleMessage = {
   query: 'RUN_RULE',
